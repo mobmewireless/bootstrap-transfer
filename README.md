@@ -19,7 +19,9 @@ Also you can add some bootstrap classes such as 'input-xlarge' in forms:
 
     <div id="test" class="input-xlarge"></div>
 
-Now call bootstrapTransfer on the corresponding jquery object and add some values to the left column:
+Now call bootstrapTransfer on the corresponding jquery object and add some values to the left column. You
+can also initialize bootstrapTransfer to have certain values in the right-hand column using the
+initialize_target method:
 
     $(function() {
         ...
@@ -32,16 +34,12 @@ Now call bootstrapTransfer on the corresponding jquery object and add some value
             {value:"5", content:"Grapes"}
         ]);
         ...
-    });
-
-If you want to initialize boostrapTransfer with certain values in the right column, you can do so
-using the initialize_target() method:
-
-    t.initialize_target([
+        t.initialize_target([
             "1",
             "2",
             "5"
-    ]);
+        ]);
+    });
 
 You can get the selected values any time:
 
