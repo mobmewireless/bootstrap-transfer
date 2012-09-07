@@ -8,6 +8,7 @@
         this.populate = function(input) { _this.populate(input); };
         this.set_values = function(values) { _this.set_values(values); };
         this.get_values = function() { return _this.get_values(); };
+        this.initialize_target = function(values) { _this.initialize_target(values); };
         return this.each(function(){
             _this = $(this);
             /* #=============================================================================== */
@@ -39,18 +40,23 @@
             /* #=============================================================================== */
             _this.$add_btn.click(function(){
                 _this.move_elems(_this.$remaining_select.val(), false, true);
+                return false;
             });
             _this.$remove_btn.click(function(){
                 _this.move_elems(_this.$target_select.val(), true, false);
+                return false;
             });
             _this.$choose_all_btn.click(function(){
                 _this.move_all(false, true);
+                return false;
             });
             _this.$clear_all_btn.click(function(){
                 _this.move_all(true, false);
+                return false;
             });
             _this.$filter_input.keyup(function(){
                 _this.update_lists(true);
+                return false;
             });
             /* #=============================================================================== */
             /* # Implement public functions */
@@ -101,10 +107,10 @@
                         var e = lists[i][j];
                         if (e[1]) {
                             var selected = '';
-                            if (!force_hilite_off && settings.hilite_selection && !old[i].hasOwnProperty(e[0].value)) {
+                            if (!force_hilite_off && settings.hilite_selection && !old[i].hasOwnProperty(e[0].value.replace('&amp;', '&'))) {
                                 selected = 'selected="selected"';
                             }
-                            source[i].append('<option ' + selected + 'value=' + e[0].value + '>' + e[0].content + '</option>');
+                            source[i].append('<option ' + selected + 'value="' + e[0].value + '">' + e[0].content + '</option>');
                         }
                     }
                 }
@@ -121,7 +127,7 @@
                     val = values[i];
                     for (var j in _this._remaining_list) {
                         var e = _this._remaining_list[j];
-                        if (e[0].value == val) {
+                        if (e[0].value.replace('&amp;', '&') == val.replace('&amp;', '&')) {
                             e[1] = b1;
                             _this._target_list[j][1] = b2;
                         }
@@ -136,17 +142,20 @@
                 }
                 _this.update_lists(false);
             };
+            _this.initialize_target = function(values) {
+                _this.move_elems(values, false, true);
+            };
             _this.data('bootstrapTransfer', _this);
             return _this;
         });
     };
     $.fn.bootstrapTransfer.defaults = {
-        'template':                                         
+        'template':
             '<table width="100%" cellspacing="0" cellpadding="0">\
                 <tr>\
                     <td width="50%">\
                         <div class="selector-available">\
-                            <h2>Available</h2>\
+                            <h2>Show</h2>\
                             <div class="selector-filter">\
                                 <table width="100%" border="0">\
                                     <tr>\
@@ -174,7 +183,7 @@
                     </td>\
                     <td width="50%">\
                         <div class="selector-chosen">\
-                            <h2>Chosen</h2>\
+                            <h2>Hide</h2>\
                             <div class="selector-filter right">\
                                 <p>Select then click</p><span class="illustration"></span>\
                             </div>\
