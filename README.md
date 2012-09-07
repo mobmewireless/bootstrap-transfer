@@ -14,12 +14,12 @@ First, in your html create a div and give it some id:
 It is possible to set a width value whose bootstrapTransfer will use for the generated widget:
 
     <div id="test" style="width:500px;"></div>
-	
+
 Also you can add some bootstrap classes such as 'input-xlarge' in forms:
-	
+
     <div id="test" class="input-xlarge"></div>
-	
-Now call bootstrapTransfer on the corresponding jquery object and add some values:
+
+Now call bootstrapTransfer on the corresponding jquery object and add some values to the left column:
 
     $(function() {
         ...
@@ -34,6 +34,15 @@ Now call bootstrapTransfer on the corresponding jquery object and add some value
         ...
     });
 
+If you want to initialize boostrapTransfer with certain values in the right column, you can do so
+using the initialize_target() method:
+
+    t.initialize_target([
+            "1",
+            "2",
+            "5"
+    ]);
+
 You can get the selected values any time:
 
     console.log(t.get_values());
@@ -41,7 +50,7 @@ You can get the selected values any time:
 Setting new values is straightforward:
 
     t.set_values(["2", "4"]);
-	
+
 Alternatively, you can access the plugin object directly from the selector:
 
 	$('#test').data().bootstrapTransfer.get_values()
@@ -54,8 +63,8 @@ Options are:
     target_id : the id of the internal select element, useful for wiring events and such
 	height : the height of the select columns, default value is '10em'
 	hilite_selection: if true will hilite the moved items between the columns, default value is true
-	
-Example:	
+
+Example:
 
     $('#test').bootstrapTransfer(
         {'target_id': 'multi-select-input'
