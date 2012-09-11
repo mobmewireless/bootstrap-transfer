@@ -67,6 +67,9 @@
                     if (newPos > -1) {
                         $('select.target option').eq(newPos).before("<option value='"+$(this).val()+"' selected='selected'>"+$(this).text()+"</option>");
                         $(this).remove();
+                        var temp = _this._target_list[newPos + 1];
+                       _this._target_list[newPos + 1] =  _this._target_list[newPos];
+                       _this._target_list[newPos] = temp;
                     }
                 });
             });
@@ -77,6 +80,9 @@
                     if (newPos < countOptions) {
                         $('select.target option').eq(newPos).after("<option value='"+$(this).val()+"' selected='selected'>"+$(this).text()+"</option>");
                         $(this).remove();
+                        var temp = _this._target_list[newPos];
+                        _this._target_list[newPos] =  _this._target_list[newPos - 1];
+                        _this._target_list[newPos - 1] = temp;
                     }
                 });
             });
@@ -128,6 +134,7 @@
                         var e = lists[i][j];
 
                         var selected = '';
+
                         if (!force_hilite_off && settings.hilite_selection && !old[i].hasOwnProperty(e.value.replace('&amp;', '&'))) {
                             selected = 'selected="selected"';
                         }
