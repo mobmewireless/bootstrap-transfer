@@ -188,6 +188,8 @@
 
                 _this.update_lists(false);
             };
+
+            // TODO: Update this so that moving all frmo search results only adds the results, not the entire available list.
             _this.move_all = function(list_selector_boolean) {
                 var list_to_remove_from = list_selector_boolean ? _this._remaining_list : _this._target_list;
                 var list_to_add_to      = list_selector_boolean ? _this._target_list    : _this._remaining_list;

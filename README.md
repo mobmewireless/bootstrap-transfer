@@ -70,3 +70,8 @@ Example:
          'hilite_selection': false});
 
 I hope you find this widget useful.
+
+TODO
+====
+
+1. Add all from search results should only add the results, not the entire available list.
