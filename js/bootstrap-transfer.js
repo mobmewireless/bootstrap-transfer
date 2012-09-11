@@ -154,26 +154,35 @@
                     }
                 });
             };
+
+            // We'll now create a modified remaining items list which removes all hidden items (by search) from consideration.
+            _this._remaining_list_minus_hidden = function() {
+                var remaining_list_minus_hidden = $.map(_this._remaining_list, function (el, idx) {
+                    return ($.inArray(idx, _this._hidden_list) == -1) ? el : false
+                });
+
+                remaining_list_minus_hidden = $.grep(remaining_list_minus_hidden, function (value) {
+                    return value != false;
+                });
+                return remaining_list_minus_hidden;
+            }
+
+            // We'll also create a list which contains only those items from remaining list, which has been hidden,
+            // so that we can restore those to the remaining list once we're done with the move.
+            _this._hidden_from_remaining_list = function() {
+                var hidden_from_remaining_list = $.map(_this._remaining_list, function (el, idx) {
+                    return ($.inArray(idx, _this._hidden_list) == -1) ? false : el
+                });
+
+                hidden_from_remaining_list = $.grep(hidden_from_remaining_list, function (value) {
+                    return value != false;
+                });
+                return hidden_from_remaining_list;
+            }
+
             _this.move_elems = function(values, list_selector_boolean) {
-                // We'll now create a modified remaining items list which removes all hidden items (by search) from consideration.
-                var remaining_list_minus_hidden = $.map(_this._remaining_list, function(el, idx) {
-                  return ($.inArray(idx, _this._hidden_list) == -1) ? el : false
-                });
-
-                remaining_list_minus_hidden = $.grep(remaining_list_minus_hidden, function(value) {
-                  return value != false;
-                });
-
-                // We'll also create a list which contains only those items from remaining list, which has been hidden,
-                // so that we can restore those to the remaining list once we're done with the move.
-                var hidden_from_remaining_list = $.map(_this._remaining_list, function(el, idx) {
-                  return ($.inArray(idx, _this._hidden_list) == -1) ? false : el
-                });
-
-                hidden_from_remaining_list = $.grep(hidden_from_remaining_list, function(value) {
-                  return value != false;
-                });
-
+                var remaining_list_minus_hidden = _this._remaining_list_minus_hidden();
+                var hidden_from_remaining_list = _this._hidden_from_remaining_list();
                 var list_to_remove_from = list_selector_boolean ? remaining_list_minus_hidden : _this._target_list;
                 var list_to_add_to      = list_selector_boolean ? _this._target_list : _this._remaining_list;
 
@@ -196,15 +205,16 @@
                 _this.update_lists(false);
             };
 
-            // TODO: Update this so that moving all frmo search results only adds the results, not the entire available list.
             _this.move_all = function(list_selector_boolean) {
-                var list_to_remove_from = list_selector_boolean ? _this._remaining_list : _this._target_list;
+                var remaining_list_minus_hidden = _this._remaining_list_minus_hidden();
+                var hidden_from_remaining_list = _this._hidden_from_remaining_list();
+                var list_to_remove_from = list_selector_boolean ? remaining_list_minus_hidden : _this._target_list;
                 var list_to_add_to      = list_selector_boolean ? _this._target_list    : _this._remaining_list;
 
                 $.each(list_to_remove_from, function(idx, el) {list_to_add_to.push(el) });
 
                 if(list_selector_boolean) {
-                    _this._remaining_list = [];
+                    _this._remaining_list = hidden_from_remaining_list;
                 } else {
                     _this._target_list = [];
                 }
