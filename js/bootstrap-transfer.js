@@ -28,6 +28,7 @@
             _this.$clear_all_btn = _this.find('.selector-clearall');
             _this._remaining_list = [];
             _this._target_list = [];
+            _this._hidden_list = [];
             /* #=============================================================================== */
             /* # Apply settings */
             /* #=============================================================================== */
@@ -133,17 +134,41 @@
                         source[i].append('<option ' + selected + 'value="' + e.value + '">' + e.content + '</option>');
                     }
                 }
+
+                _this._hidden_list = [];
+                var counter = 0;
                 _this.$remaining_select.find('option').each(function() {
                     var inner = _this.$filter_input.val().toLowerCase();
                     var outer = $(this).html().toLowerCase();
                     if (outer.indexOf(inner) == -1) {
+                        _this._hidden_list.push($(this)[0].index + counter);
                         $(this).remove();
+                        counter += 1;
                     }
-                })
+                });
             };
             _this.move_elems = function(values, list_selector_boolean) {
-                var list_to_remove_from = list_selector_boolean ? _this._remaining_list : _this._target_list;
-                var list_to_add_to      = list_selector_boolean ? _this._target_list    : _this._remaining_list;
+                // We'll now create a modified remaining items list which removes all hidden items (by search) from consideration.
+                var remaining_list_minus_hidden = $.map(_this._remaining_list, function(el, idx) {
+                  return ($.inArray(idx, _this._hidden_list) == -1) ? el : false
+                });
+
+                remaining_list_minus_hidden = $.grep(remaining_list_minus_hidden, function(value) {
+                  return value != false;
+                });
+
+                // We'll also create a list which contains only those items from remaining list, which has been hidden,
+                // so that we can restore those to the remaining list once we're done with the move.
+                var hidden_from_remaining_list = $.map(_this._remaining_list, function(el, idx) {
+                  return ($.inArray(idx, _this._hidden_list) == -1) ? false : el
+                });
+
+                hidden_from_remaining_list = $.grep(hidden_from_remaining_list, function(value) {
+                  return value != false;
+                });
+
+                var list_to_remove_from = list_selector_boolean ? remaining_list_minus_hidden : _this._target_list;
+                var list_to_add_to      = list_selector_boolean ? _this._target_list : _this._remaining_list;
 
                 var counter = 0
 
@@ -156,7 +181,7 @@
                 }
 
                 if(list_selector_boolean) {
-                    _this._remaining_list = list_to_remove_from;
+                    _this._remaining_list = list_to_remove_from.concat(hidden_from_remaining_list);
                 } else {
                     _this._target_list = list_to_remove_from;
                 }
