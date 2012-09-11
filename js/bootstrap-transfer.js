@@ -72,7 +72,7 @@
             });
             $('#btn-down').bind('click', function() {
                 var countOptions = $('select.target option').size();
-                $('select.target option:selected').each( function() {
+                $.each($('select.target option:selected').get().reverse(), function() {
                     var newPos = $('select.target option').index(this) + 1;
                     if (newPos < countOptions) {
                         $('select.target option').eq(newPos).after("<option value='"+$(this).val()+"' selected='selected'>"+$(this).text()+"</option>");
