@@ -36,6 +36,8 @@
             if (settings.target_id != '') _this.$target_select.attr('id', settings.target_id);
             /* height */
             _this.find('select.filtered').css('height', settings.height);
+            /* target_name */
+            if (settings.target_select_name != '') _this.$target_select.attr('name', settings.target_select_name + '[]');
             /* #=============================================================================== */
             /* # Wire internal events */
             /* #=============================================================================== */
@@ -68,8 +70,8 @@
                         $('select.target option').eq(newPos).before("<option value='"+$(this).val()+"' selected='selected'>"+$(this).text()+"</option>");
                         $(this).remove();
                         var temp = _this._target_list[newPos + 1];
-                       _this._target_list[newPos + 1] =  _this._target_list[newPos];
-                       _this._target_list[newPos] = temp;
+                        _this._target_list[newPos + 1] =  _this._target_list[newPos];
+                        _this._target_list[newPos] = temp;
                     }
                 });
             });
@@ -123,7 +125,7 @@
                 var old;
                 if (!force_hilite_off) {
                     old = [_this.to_dict(_this.get_internal(_this.$remaining_select)),
-                           _this.to_dict(_this.get_internal(_this.$target_select))];
+                        _this.to_dict(_this.get_internal(_this.$target_select))];
                 }
                 _this.$remaining_select.empty();
                 _this.$target_select.empty();
@@ -266,7 +268,7 @@
                             <div class="selector-filter right">\
                                 <p>Select from available then click <i class="icon-chevron-right"></i></p></span>\
                             </div>\
-                            <select multiple="multiple" class="filtered target">\
+                            <select multiple="multiple" class="filtered target rule-engine-multiselect-selected">\
                             </select>\
                             <a href="#" class="btn selector-clearall"><i class="icon-backward"></i>&nbsp;Remove all</a>\
                         </div>\
@@ -279,6 +281,7 @@
             </table>',
         'height': '10em',
         'hilite_selection': true,
-        'target_id': ''
+        'target_id': '',
+        'target_select_name': 'target'
     }
 })(jQuery);
